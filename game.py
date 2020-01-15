@@ -22,7 +22,7 @@ class fencer(pygame.sprite.Sprite):
     def __init__(self, group, side="left"):
         # базовая инициализация
         super().__init__(group)
-        # выбор того, какой из двух игроко это будет
+        # выбор того, какой из двух игроков это будет
         self.side = side
         # загрузка картинки игрока
         self.image = load_image(side + "_mid_stance.png", colorkey=-1)
@@ -35,6 +35,23 @@ class fencer(pygame.sprite.Sprite):
             self.rect.x = 150
         if side == "right":
             self.rect.x = 300
+
+    def react(self, key):
+        if (key == pygame.K_w) or (key == pygame.K_o):
+            if self.stance < 3:
+                self.stance += 1
+        if (key == pygame.K_s) or (key == pygame.K_l):
+            if self.stance > 1:
+                self.stance -= 1;
+
+
+    def next_state(self):
+        if self.stance == 1:
+            self.image = load_image(self.side + "_down_stance.png", colorkey=-1)
+        if self.stance == 2:
+            self.image = load_image(self.side + "_mid_stance.png", colorkey=-1)
+        if self.stance == 3:
+            self.image = load_image(self.side + "_up_stance.png", colorkey=-1)
 
 
 pygame.init()
@@ -54,7 +71,16 @@ while running:
         # закрытие окна
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.KEYDOWN:
+            if (event.key == pygame.K_o) or (event.key == pygame.K_l):
+                right_fencer.react(event.key)
+            if (event.key == pygame.K_w) or (event.key == pygame.K_s):
+                left_fencer.react(event.key)
+    right_fencer.next_state()
+    left_fencer.next_state()
+    # отрисовываем спрайты
+    screen.fill((120, 60, 30))
     all_sprites.draw(screen)
     pygame.display.flip()
-
+# закрыаем окно
 pygame.quit()
