@@ -17,7 +17,7 @@ def load_image(name, colorkey=None):
     return image
 
 
-class fencer(pygame.sprite.Sprite):
+class Fencer(pygame.sprite.Sprite):
     # класс игрока
     def __init__(self, group, side="left"):
         # базовая инициализация
@@ -29,6 +29,7 @@ class fencer(pygame.sprite.Sprite):
         # установка стойки
         self.stance = 2
         # установка координат
+        self.attacking = 0
         self.rect = self.image.get_rect()
         self.rect.y = 50
         if side == "left":
@@ -37,15 +38,19 @@ class fencer(pygame.sprite.Sprite):
             self.rect.x = 300
 
     def react(self, key):
+        # реакция на нажатие клавиши
         if (key == pygame.K_w) or (key == pygame.K_o):
+            # смена стойки на более верхнюю
             if self.stance < 3:
                 self.stance += 1
         if (key == pygame.K_s) or (key == pygame.K_l):
+            # смена стойки на более нижнюю
             if self.stance > 1:
                 self.stance -= 1;
 
 
     def next_state(self):
+        # обноление состояния
         if self.stance == 1:
             self.image = load_image(self.side + "_down_stance.png", colorkey=-1)
         if self.stance == 2:
@@ -62,8 +67,8 @@ screen.fill((0, 0, 0))
 # создаем группу всех спрайтов
 all_sprites = pygame.sprite.Group()
 # создаем спрайты игроков
-left_fencer = fencer(all_sprites)
-right_fencer = fencer(all_sprites, "right")
+left_fencer = Fencer(all_sprites)
+right_fencer = Fencer(all_sprites, "right")
 # игровой цикл
 running = True
 while running:
