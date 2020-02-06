@@ -17,6 +17,19 @@ def load_image(name, colorkey=None):
     return image
 
 
+class BarrierBox(pygame.sprite.Sprite):
+    # класс коробки, ограничивающей перемещение игроков
+    def __init__(self, group, side="left"):
+        super().__init__(group)
+        self.image = load_image("barrier_box.png", colorkey=-1)
+        self.rect = self.image.get_rect()
+        self.rect.y = 50
+        if side == "left":
+            self.rect.x = 50
+        if side == "right":
+            self.rect.x = 400
+
+
 class Fencer(pygame.sprite.Sprite):
     # класс игрока
     def __init__(self, group, side="left"):
@@ -29,6 +42,7 @@ class Fencer(pygame.sprite.Sprite):
         # установка состояний
         self.stance = 2
         self.attacking = 0
+        self.walking = 0
         # установка координат
         self.rect = self.image.get_rect()
         self.rect.y = 50
@@ -84,6 +98,8 @@ all_sprites = pygame.sprite.Group()
 # создаем спрайты игроков
 left_fencer = Fencer(all_sprites)
 right_fencer = Fencer(all_sprites, "right")
+left_box = BarrierBox(all_sprites)
+right_box = BarrierBox(all_sprites, "right")
 # игровой цикл
 # таймер
 clock = pygame.time.Clock()
