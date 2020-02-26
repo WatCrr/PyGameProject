@@ -21,7 +21,9 @@ class BarrierBox(pygame.sprite.Sprite):
     # класс коробки, ограничивающей перемещение игроков
     def __init__(self, group, side="left"):
         super().__init__(group)
+        # загрузка картинки коробки
         self.image = load_image("barrier_box.png", colorkey=-1)
+        # установка координат
         self.rect = self.image.get_rect()
         self.rect.y = 50
         if side == "left":
@@ -33,7 +35,6 @@ class BarrierBox(pygame.sprite.Sprite):
 class Fencer(pygame.sprite.Sprite):
     # класс игрока
     def __init__(self, group, side="left"):
-        # базовая инициализация
         super().__init__(group)
         # выбор того, какой из двух игроков это будет
         self.side = side
@@ -64,18 +65,40 @@ class Fencer(pygame.sprite.Sprite):
                     self.stance -= 1
             if (key == pygame.K_LALT) or (key == pygame.K_RALT):
                 self.attacking = 24
+            if (key == pygame.K_d) or (key == pygame.K_SEMICOLON):
+                self.walking = 12
+            if (key == pygame.K_a) or (key == pygame.K_k):
+                self.walking = -12
 
 
     def next_state(self):
         # обноление состояния
         if self.attacking == 0:
-            if self.stance == 1:
-                self.image = load_image(self.side + "_down_stance.png", colorkey=-1)
-            if self.stance == 2:
-                self.image = load_image(self.side + "_mid_stance.png", colorkey=-1)
-            if self.stance == 3:
-                self.image = load_image(self.side + "_up_stance.png", colorkey=-1)
+            if self.walking == 0:
+                if self.stance == 1:
+                    self.image = load_image(self.side + "_down_stance.png", colorkey=-1)
+                if self.stance == 2:
+                    self.image = load_image(self.side + "_mid_stance.png", colorkey=-1)
+                if self.stance == 3:
+                    self.image = load_image(self.side + "_up_stance.png", colorkey=-1)
+            else:
+                if self.stance == 1:
+                    self.image = load_image(self.side + "_down_walk.png", colorkey=-1).\
+                        subsurface(pygame.Rect(50 * (abs(self.walking) // (-4) + 3), 0, 50, 50))
+                if self.stance == 2:
+                    self.image = load_image(self.side + "_mid_walk.png", colorkey=-1).\
+                        subsurface(pygame.Rect(50 * (abs(self.walking) // (-4) + 3), 0, 50, 50))
+                if self.stance == 3:
+                    self.image = load_image(self.side + "_up_walk.png", colorkey=-1).\
+                        subsurface(pygame.Rect(50 * (abs(self.walking) // (-4) + 3), 0, 50, 50))
+                if self.walking > 0:
+                    self.walking -= 1
+                    self.rect.x += 1
+                else:
+                    self.walking += 1
+                    self.rect.x -= 1
         else:
+            sef.walking = 0
             if self.stance == 1:
                 self.image = load_image(self.side + "_down_attack.png", colorkey=-1).\
                     subsurface(pygame.Rect(50 - self.attacking // 19 * 50, 0, 50, 50))
@@ -85,7 +108,7 @@ class Fencer(pygame.sprite.Sprite):
             if self.stance == 3:
                 self.image = load_image(self.side + "_up_attack.png", colorkey=-1).\
                     subsurface(pygame.Rect(50 - self.attacking // 19 * 50, 0, 50, 50))
-            self. attacking -= 1
+            self.attacking -= 1
            
 
 pygame.init()
@@ -111,9 +134,13 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.KEYDOWN:
-            if (event.key == pygame.K_o) or (event.key == pygame.K_l) or (event.key == pygame.K_RALT):
+            if ((event.key == pygame.K_o) or (event.key == pygame.K_l) or
+                (event.key == pygame.K_RALT) or
+                (event.key == pygame.K_k) or (event.key == pygame.K_SEMICOLON)):
                 right_fencer.react(event.key)
-            if (event.key == pygame.K_w) or (event.key == pygame.K_s) or (event.key == pygame.K_LALT):
+            if ((event.key == pygame.K_w) or (event.key == pygame.K_s) or
+                (event.key == pygame.K_LALT) or
+                (event.key == pygame.K_a) or (event.key == pygame.K_d)):
                 left_fencer.react(event.key)
     right_fencer.next_state()
     left_fencer.next_state()
@@ -124,3 +151,4 @@ while running:
     clock.tick(fps)
 # закрыаем окно
 pygame.quit()
+# пельмешки
