@@ -23,7 +23,6 @@ class BarrierBox(pygame.sprite.Sprite):
         super().__init__(group)
         # загрузка картинки коробки
         self.image = load_image("barrier_box.png", colorkey=-1)
-        self.mask = pygame.mask.from_surface(self.image)
         # установка координат
         self.rect = self.image.get_rect()
         self.rect.y = 50
@@ -41,7 +40,6 @@ class Fencer(pygame.sprite.Sprite):
         self.side = side
         # загрузка картинки игрока
         self.image = load_image(side + "_mid_stance.png", colorkey=-1)
-        self.mask = pygame.mask.from_surface(self.image)
         # установка состояний
         self.stance = 2
         self.attacking = 0
@@ -100,7 +98,7 @@ class Fencer(pygame.sprite.Sprite):
                     self.walking += 1
                     self.rect.x -= 1
         else:
-            self.walking = 0
+            sef.walking = 0
             if self.stance == 1:
                 self.image = load_image(self.side + "_down_attack.png", colorkey=-1).\
                     subsurface(pygame.Rect(50 - self.attacking // 19 * 50, 0, 50, 50))
