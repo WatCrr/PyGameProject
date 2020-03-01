@@ -144,6 +144,13 @@ while running:
                 left_fencer.react(event.key)
     right_fencer.next_state()
     left_fencer.next_state()
+    if pygame.sprite.collide_mask(left_fencer, left_box):
+        left_fencer.rect.x += 1
+    if pygame.sprite.collide_mask(right_fencer, right_box):
+        right_fencer.rect.x -= 1
+    if pygame.sprite.collide_mask(right_fencer, left_fencer):
+        right_fencer.rect.x += 1
+        left_fencer.rect.x -= 1
     # отрисовываем спрайты
     screen.fill((120, 60, 30))
     all_sprites.draw(screen)
