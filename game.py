@@ -113,7 +113,7 @@ class Fencer(pygame.sprite.Sprite):
 
 pygame.init()
 # создаем окно
-size = (500, 150)
+size = (500, 200)
 screen = pygame.display.set_mode(size)
 screen.fill((0, 0, 0))
 # создаем группу всех спрайтов
@@ -169,11 +169,26 @@ while running:
         left_fencer.rect.x -= 1
     # отрисовываем
     screen.fill((120, 60, 30))
-    font = pygame.font.Font(None, 40)
-    left_wins_table = font.render(str(left_wins), 0, (255, 0, 255))
-    right_wins_table = font.render(str(right_wins), 0, (255, 0, 255))
+    num_font = pygame.font.Font(None, 40)
+    left_wins_table = num_font.render(str(left_wins), 0, (255, 0, 255))
+    right_wins_table = num_font.render(str(right_wins), 0, (255, 0, 255))
     screen.blit(left_wins_table, (5, 5))
     screen.blit(right_wins_table, (500 - 25 * len(str(right_wins)), 5)) 
+    rules_font = pygame.font.Font(None, 15)
+    rules = rules_font.render("Упраление:", 0, (255, 0, 255))
+    screen.blit(rules, (50, 104))
+    rules = rules_font.render("Передвижние: A и D, K и ;. Атака: левый, правый Alt." +
+                              "Смена стойки W и S, O и L",
+                              0, (255, 0, 255))
+    screen.blit(rules, (50, 119))
+    rules = rules_font.render("Правила:", 0, (255, 0, 255))
+    screen.blit(rules, (50, 134))
+    rules = rules_font.render("Чтоб заработать очко, нужно ударить соперника.",
+                              0, (255, 0, 255))
+    screen.blit(rules, (50, 149))
+    rules = rules_font.render("Чтобы заблокировать удар, нужно принять ту же стойку, что и соперник",
+                              0, (255, 0, 255))
+    screen.blit(rules, (50, 164))
     all_sprites.draw(screen)
     pygame.display.flip()
     clock.tick(fps)
