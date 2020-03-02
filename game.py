@@ -98,7 +98,7 @@ class Fencer(pygame.sprite.Sprite):
                     self.walking += 1
                     self.rect.x -= 1
         else:
-            sef.walking = 0
+            self.walking = 0
             if self.stance == 1:
                 self.image = load_image(self.side + "_down_attack.png", colorkey=-1).\
                     subsurface(pygame.Rect(50 - self.attacking // 19 * 50, 0, 50, 50))
@@ -128,6 +128,8 @@ right_box = BarrierBox(all_sprites, "right")
 clock = pygame.time.Clock()
 fps = 24
 running = True
+right_wins = 0
+left_wins = 0
 while running:
     for event in pygame.event.get():
         # закрытие окна
@@ -149,10 +151,29 @@ while running:
     if pygame.sprite.collide_mask(right_fencer, right_box):
         right_fencer.rect.x -= 1
     if pygame.sprite.collide_mask(right_fencer, left_fencer):
+        if (right_fencer.attacking > 0) and (right_fencer.attacking < 13) and\
+            (right_fencer.stance != left_fencer.stance):
+            right_wins += 1
+            right_fencer.rect.x = 300
+            left_fencer.rect.x = 150
+            right_fencer.stance = 2
+            left_fencer.stance = 2
+        if (left_fencer.attacking > 0) and (left_fencer.attacking < 13) and\
+            (right_fencer.stance != left_fencer.stance):
+            left_wins +=1
+            right_fencer.rect.x = 300
+            left_fencer.rect.x = 150
+            right_fencer.stance = 2
+            left_fencer.stance = 2
         right_fencer.rect.x += 1
         left_fencer.rect.x -= 1
-    # отрисовываем спрайты
+    # отрисовываем
     screen.fill((120, 60, 30))
+    font = pygame.font.Font(None, 40)
+    left_wins_table = font.render(str(left_wins), 0, (255, 0, 255))
+    right_wins_table = font.render(str(right_wins), 0, (255, 0, 255))
+    screen.blit(left_wins_table, (5, 5))
+    screen.blit(right_wins_table, (500 - 25 * len(str(right_wins)), 5)) 
     all_sprites.draw(screen)
     pygame.display.flip()
     clock.tick(fps)
